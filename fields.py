@@ -15,19 +15,19 @@ class Field(ABC):
     @property
     # Функция проверки типа поля
     def field_type(self) -> bool:
-        pass
-
+        raise NotImplementedError()
+    
     # Функция-алидатор
     def validate(self, answer: str) -> bool:
-        self.answer = answer
-
-        if self.field_type(): # Проверка типа данных
-            if self.validator(self.answer): # Проверка на правильность работы функции-валидатора
+        if self.field_type(answer): # Проверка типа данных
+            if self.validator(answer): # Проверка на правильность работы функции-валидатора
                 return True
             else:
-                return self.validating_error
+                return False
+                # return self.validating_error
         else:
-            return self.type_error
+            return False
+            # return self.type_error
 
     def question(self) -> str:
         pass
@@ -40,11 +40,11 @@ class CharField(Field):
         self.max_length = max_length # Максимальная длинна строки
 
     # Функция проверки типа поля
-    def field_type(self) -> bool:
-        return self.answer.isdigit() # Проверка типа данных
+    def field_type(self, answer: str) -> bool:
+        return isinstance(answer, str) # Проверка типа данных
 
 # Класс числового поля
 class IntegerField(Field):
     # Функция проверки типа поля
-    def field_type(self) -> bool:
-        return isinstance(self.answer, str) # Проверка типа данных
+    def field_type(self, answer: str) -> bool:
+        return answer.isdigit() # Проверка типа данных
